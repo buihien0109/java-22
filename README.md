@@ -1,3 +1,3 @@
-## Khóa học Java Spring Boot 21 (Techmaster VietNam)
+## Khóa học Java Spring Boot 22 (Techmaster VietNam)
 
 Source code tham khảo
