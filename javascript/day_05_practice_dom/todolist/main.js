@@ -1,5 +1,5 @@
 // todo : id, title, status
-const todos = [
+let todos = [
     {
         id: 1,
         title: "Đi chợ",
@@ -35,10 +35,14 @@ const renderTodos = (todoList) => {
     todoList.forEach((todo) => {
         html += `
                 <li>
-                    <input type="checkbox" ${todo.status ? "checked" : ""}>
-                    <span class="${todo.status ? "active" : ""}">${todo.title}</span>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                    <input type="checkbox" ${
+                        todo.status ? "checked" : ""
+                    } onchange="toggleStatus(${todo.id})">
+                    <span class="${todo.status ? "active" : ""}">${
+            todo.title
+        }</span>
+                    <button onclick="editTodo(${todo.id})">Edit</button>
+                    <button onclick="deleteTodo(${todo.id})">Delete</button>
                 </li>
             `;
         // if(todo.status) {
@@ -74,7 +78,7 @@ btnAdd.addEventListener("click", () => {
     const value = inputEl.value;
 
     // Kiểm tra giá trị input có rỗng hay không
-    if(value.trim() === "") {
+    if (value.trim() === "") {
         alert("Tiêu đề công việc không được để trống");
         return;
     }
@@ -94,5 +98,38 @@ btnAdd.addEventListener("click", () => {
 
     inputEl.value = "";
 });
+
+// Xóa công việc
+const deleteTodo = (id) => {
+    console.log(id);
+    const isConfirm = window.confirm(
+        "Bạn có chắc chắn muốn xóa công việc này không?"
+    );
+    if (!isConfirm) return;
+
+    todos = todos.filter((todo) => todo.id !== id);
+    renderTodos(todos);
+};
+
+// Cập nhật tiêu đề công việc
+const editTodo = (id) => {
+    console.log(id);
+    // Sử dụng window.prompt để hiển thị popup nhập tiêu đề công việc
+
+    // Tìm kiếm cv cần sửa theo id
+
+    // Cập nhật lại tiêu đề công việc
+
+    // Render lại giao diện
+};
+
+// Thay đổi trạng thái công việc
+const toggleStatus = (id) => {
+    console.log(id);
+    const todo = todos.find((todo) => todo.id === id);
+    todo.status = !todo.status;
+
+    renderTodos(todos);
+};
 
 renderTodos(todos);
