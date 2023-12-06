@@ -114,13 +114,23 @@ const deleteTodo = (id) => {
 // Cập nhật tiêu đề công việc
 const editTodo = (id) => {
     console.log(id);
-    // Sử dụng window.prompt để hiển thị popup nhập tiêu đề công việc
-
     // Tìm kiếm cv cần sửa theo id
+    const todo = todos.find((todo) => todo.id === id);
+
+    // Sử dụng window.prompt để hiển thị popup nhập tiêu đề công việc
+    let newTitle = window.prompt("Nhập tiêu đề công việc mới", todo.title);
+
+    if (newTitle === null) return;
+    if (newTitle.trim() === "") {
+        alert("Tiêu đề công việc không được để trống");
+        return;
+    }
 
     // Cập nhật lại tiêu đề công việc
+    todo.title = newTitle;
 
     // Render lại giao diện
+    renderTodos(todos);
 };
 
 // Thay đổi trạng thái công việc
