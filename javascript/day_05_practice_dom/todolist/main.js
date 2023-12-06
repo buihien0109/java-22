@@ -1,0 +1,98 @@
+// todo : id, title, status
+const todos = [
+    {
+        id: 1,
+        title: "Đi chợ",
+        status: false,
+    },
+    {
+        id: 2,
+        title: "Nấu cơm",
+        status: true,
+    },
+    {
+        id: 3,
+        title: "Rửa bát",
+        status: true,
+    },
+];
+
+const inputEl = document.querySelector("#input-todo");
+const btnAdd = document.querySelector("#btn-add");
+const todoListEl = document.querySelector("ul");
+
+const renderTodos = (todoList) => {
+    todoListEl.innerHTML = "";
+    if (todoList.length === 0) {
+        todoListEl.insertAdjacentHTML(
+            "afterbegin",
+            "<li>Không có công việc nào trong danh sách</li>"
+        );
+        return;
+    }
+
+    let html = "";
+    todoList.forEach((todo) => {
+        html += `
+                <li>
+                    <input type="checkbox" ${todo.status ? "checked" : ""}>
+                    <span class="${todo.status ? "active" : ""}">${todo.title}</span>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </li>
+            `;
+        // if(todo.status) {
+        //     html += `
+        //         <li>
+        //             <input type="checkbox" checked>
+        //             <span class="active">${todo.title}</span>
+        //             <button>Edit</button>
+        //             <button>Delete</button>
+        //         </li>
+        //     `
+        // } else {
+        //     html += `
+        //         <li>
+        //             <input type="checkbox">
+        //             <span>${todo.title}</span>
+        //             <button>Edit</button>
+        //             <button>Delete</button>
+        //         </li>
+        //     `
+        // }
+    });
+    todoListEl.innerHTML = html;
+};
+
+const randomId = () => {
+    return Math.floor(Math.random() * 1000000);
+};
+
+// Thêm công việc
+btnAdd.addEventListener("click", () => {
+    // Lấy giá trị từ input
+    const value = inputEl.value;
+
+    // Kiểm tra giá trị input có rỗng hay không
+    if(value.trim() === "") {
+        alert("Tiêu đề công việc không được để trống");
+        return;
+    }
+
+    // Tạo todo mới
+    const newTodo = {
+        id: randomId(),
+        title: value,
+        status: false,
+    };
+
+    // Thêm vào mảng todos
+    todos.push(newTodo);
+
+    // Render lại giao diện
+    renderTodos(todos);
+
+    inputEl.value = "";
+});
+
+renderTodos(todos);
