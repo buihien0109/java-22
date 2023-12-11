@@ -1,30 +1,36 @@
 const questions = [
     {
-        title: "What is the capital of France?",
-        choices: ["New York", "London", "Paris", "Dublin"],
-        answer: "Paris"
+        title: "1 + 1 bằng bao nhiêu?",
+        choices: ["1", "2", "3", "4"],
+        type: "single",
+        answer: "2"
     },
     {
-        title: "What is the capital of Ireland?",
-        choices: ["London", "New York", "Paris", "Dublin"],
-        answer: "Dublin"
+        title: "Những số nào sau đây là số nguyên tố?",
+        choices: ["22", "31", "25", "11"],
+        type: "multiple",
+        answer: ["31", "11"]
     },
     {
-        title: "What is the capital of England?",
-        choices: ["New York", "Paris", "London", "Dublin"],
-        answer: "London"
+        title: "Căn bậc hai của 81 là bao nhiêu?",
+        choices: ["7", "8", "9", "10"],
+        type: "single",
+        answer: "9"
     },
     {
-        title: "What is the capital of America?",
-        choices: ["Dublin", "New York", "London", "Paris"],
-        answer: "New York"
+        title: "15% của 100 bằng bao nhiêu?",
+        choices: ["10", "15", "20", "25"],
+        type: "single",
+        answer: "15"
     },
     {
-        title: "What is the capital of Germany?",
-        choices: ["London", "Paris", "New York", "Berlin"],
-        answer: "Berlin"
+        title: "Những số nào sau đây chia hết cho 3?",
+        choices: ["15", "22", "27", "32"],
+        type: "multiple",
+        answer: ["15", "27"]
     }
 ];
+
 
 let currentQuestionIndex = 0;
 let score = 0;
@@ -39,7 +45,7 @@ const btnFinish = document.querySelector("#btn-finish");
 const renderQuestion = () => {
     // Lấy thông tin câu hỏi hiện tại
     const currentQuestion = questions[currentQuestionIndex];
-    console.log(currentQuestion);
+    // console.log(currentQuestion);
 
     // Hiển thị title của câu hỏi
     questionTitleEl.innerHTML = `Câu hỏi ${currentQuestionIndex + 1}: ${currentQuestion.title}`
@@ -47,12 +53,21 @@ const renderQuestion = () => {
     // Hiển thị các lựa chọn của câu hỏi
     let choicesHtml = "";
     currentQuestion.choices.forEach((choice, index) => {
-        choicesHtml += `
-            <div class="choice-item">
-                <input type="radio" name="choice" id="${index + 1}" value="${choice}">
-                <label for="${index + 1}">${choice}</label>
-            </div>
-        `;
+        if (questions[currentQuestionIndex].type === "single") {
+            choicesHtml += `
+                <div class="choice-item">
+                    <input type="radio" name="choice" id="${index + 1}" value="${choice}">
+                    <label for="${index + 1}">${choice}</label>
+                </div>
+            `;
+        } else if (questions[currentQuestionIndex].type === "multiple") {
+            choicesHtml += `
+                <div class="choice-item">
+                    <input type="checkbox" name="choice" id="${index + 1}" value="${choice}">
+                    <label for="${index + 1}">${choice}</label>
+                </div>
+            `;
+        }
     });
     choicesEl.innerHTML = choicesHtml;
 };
@@ -61,14 +76,30 @@ btnNext.addEventListener("click", () => {
     // Kiểm tra xem người dùng đã chọn đáp án chưa
     // Nếu chọn rồi -> next
     // Nếu chưa chọn -> thông báo cho người dùng chọn đáp án
-    const checkedChoice = document.querySelector("input[type=radio]:checked");
-    if (!checkedChoice) {
-        alert("Bạn chưa chọn đáp án");
-        return;
+    if (questions[currentQuestionIndex].type === "single") {
+        const checkedChoice = document.querySelector("input[type=radio]:checked");
+        if (!checkedChoice) {
+            alert("Bạn chưa chọn đáp án");
+            return;
+        }
+
+        // Lưu đáp án của người dùng vào mảng yourAnswers
+        yourAnswers.push(checkedChoice.value);
+        console.log(yourAnswers);
+    } else if (questions[currentQuestionIndex].type === "multiple") {
+        const checkedChoice = document.querySelectorAll("input[type=checkbox]:checked");
+        if (checkedChoice.length === 0) {
+            alert("Bạn chưa chọn đáp án");
+            return;
+        }
+
+        const checkedChoiceValues = [];
+        checkedChoice.forEach(choice => {
+            checkedChoiceValues.push(choice.value);
+        });
+        yourAnswers.push(checkedChoiceValues);
     }
 
-    // Lưu đáp án của người dùng vào mảng yourAnswers
-    yourAnswers.push(checkedChoice.value);
     console.log(yourAnswers);
 
     currentQuestionIndex++; // Chuyển sang câu hỏi tiếp theo
@@ -82,19 +113,46 @@ btnNext.addEventListener("click", () => {
 });
 
 btnFinish.addEventListener("click", () => {
-    const checkedChoice = document.querySelector("input[type=radio]:checked");
-    if (!checkedChoice) {
-        alert("Bạn chưa chọn đáp án");
-        return;
+    if (questions[currentQuestionIndex].type === "single") {
+        const checkedChoice = document.querySelector("input[type=radio]:checked");
+        if (!checkedChoice) {
+            alert("Bạn chưa chọn đáp án");
+            return;
+        }
+
+        // Lưu đáp án của người dùng vào mảng yourAnswers
+        yourAnswers.push(checkedChoice.value);
+        console.log(yourAnswers);
+    } else if (questions[currentQuestionIndex].type === "multiple") {
+        const checkedChoice = document.querySelectorAll("input[type=checkbox]:checked");
+        if (checkedChoice.length === 0) {
+            alert("Bạn chưa chọn đáp án");
+            return;
+        }
+
+        const checkedChoiceValues = [];
+        checkedChoice.forEach(choice => {
+            checkedChoiceValues.push(choice.value);
+        });
+        yourAnswers.push(checkedChoiceValues);
     }
 
-    yourAnswers.push(checkedChoice.value);
     console.log(yourAnswers);
 
     // Kiểm tra đáp án của người dùng
     questions.forEach((question, index) => {
-        if (question.answer === yourAnswers[index]) {
-            score++;
+        if (question.type === "single") {
+            if (question.answer === yourAnswers[index]) {
+                score++;
+            }
+        } else if (question.type === "multiple") {
+            // Sử dụng every()
+            const isCorrect = yourAnswers[index].every(answer => {
+                return question.answer.includes(answer) && question.answer.length === yourAnswers[index].length; // [1,2] === [1,2]
+            });
+            if(isCorrect) {
+                score++;
+            }
         }
     });
 
