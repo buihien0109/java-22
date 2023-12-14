@@ -56,3 +56,6 @@ const sum2 = (a = 10, b = 20) => { // default parameter - es6
 console.log(sum2(200, 300)); // a = 200, b = 300
 console.log(sum2(200)); // a = 200, b = 20
 console.log(sum2()); // a = 10, b = 20
+
+// Viết hàm tính diện tích hình chữ nhật
+const calcRectangleArea = (width, height) => width * height;
