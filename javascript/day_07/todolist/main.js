@@ -18,7 +18,7 @@ const getAllTodos = async () => {
         todos = data;
 
         // Hiển thị dữ liệu
-        renderTodos(todos);
+        renderDataAndPagination(todos);
     } catch (error) {
         console.log(error)
     }
@@ -51,6 +51,17 @@ const renderTodos = (todoList) => {
     });
     todoListEl.innerHTML = html;
 };
+
+const renderDataAndPagination = (todoList) => {
+    $('.pagination-container').pagination({
+        dataSource: todoList,
+        pageSize: 5,
+        callback: function(data, pagination) {
+            // Hiển thị dữ liệu trên trang hiện tại ra ngoài giao diện
+            renderTodos(data);
+        }
+    })
+}
 
 // Thêm công việc
 btnAdd.addEventListener("click", async () => {
@@ -89,7 +100,7 @@ btnAdd.addEventListener("click", async () => {
         todos.push(data);
 
         // Render lại giao diện
-        renderTodos(todos);
+        renderDataAndPagination(todos);
 
         inputEl.value = "";
     } catch (error) {
@@ -115,7 +126,7 @@ const deleteTodo = async (id) => {
             // C3:
             // Xóa trên giao diện
             todos = todos.filter((todo) => todo.id !== id);
-            renderTodos(todos);
+            renderDataAndPagination(todos);
         }
     } catch (error) {
         console.log(error)
@@ -159,7 +170,7 @@ const editTodo = async (id) => {
             todo.title = newTitle;
 
             // Render lại giao diện
-            renderTodos(todos);
+            renderDataAndPagination(todos);
         }
     } catch (error) {
         console.log(error)
@@ -188,7 +199,7 @@ const toggleStatus = async (id) => {
             // C2: getAllTodos();
             // C3:
             todo.status = !todo.status;
-            renderTodos(todos);
+            renderDataAndPagination(todos);
         }
     } catch (error) {
         console.log(error)
