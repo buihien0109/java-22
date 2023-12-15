@@ -17,12 +17,6 @@ const getAllUsers = async () => {
     }
 };
 
-// Tính chu vi hình tròn
-const getCirclePerimeter = (radius) => {
-    return 2 * Math.PI * radius;
-};
-
-
 const tableBodyEl = document.querySelector(".list-user tbody");
 const renderUsers = (users) => {
     let html = "";
