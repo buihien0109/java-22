@@ -33,59 +33,39 @@
   ],
   "todos": [
     {
-      "id": 1,
       "title": "Làm bài tập Javascript",
-      "status": true
+      "status": false,
+      "id": 1
     },
     {
-      "id": 2,
       "title": "Đá bóng với bạn bè",
-      "status": false
+      "status": false,
+      "id": 2
     },
     {
-      "id": 3,
       "title": "Làm việc nhà",
-      "status": true
+      "status": false,
+      "id": 3
     },
     {
       "title": "new todo",
-      "status": false,
+      "status": true,
       "id": 4
     },
     {
       "title": "Đi nhậu",
-      "status": false,
+      "status": true,
       "id": 5
     },
     {
-      "title": "Chơi game",
-      "status": false,
+      "title": "Chơi game với bạn bè",
+      "status": true,
       "id": 6
     },
     {
-      "title": "Làm việc nhà",
-      "status": false,
+      "title": "Làm việc nhà với mẹ",
+      "status": true,
       "id": 7
-    },
-    {
-      "title": "Đá bóng",
-      "status": false,
-      "id": 8
-    },
-    {
-      "title": "Ăn tối",
-      "status": false,
-      "id": 9
-    },
-    {
-      "title": "abc",
-      "status": false,
-      "id": 10
-    },
-    {
-      "title": "vvv",
-      "status": false,
-      "id": 11
     }
   ]
 }

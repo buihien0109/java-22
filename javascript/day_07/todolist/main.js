@@ -98,19 +98,33 @@ btnAdd.addEventListener("click", async () => {
 });
 
 // Xóa công việc
-const deleteTodo = (id) => {
+const deleteTodo = async (id) => {
     console.log(id);
     const isConfirm = window.confirm(
         "Bạn có chắc chắn muốn xóa công việc này không?"
     );
     if (!isConfirm) return;
+    try {
+        // Gọi API gửi dữ liệu lên server để xóa todo
+        let response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        })
+        if (response.ok) {
+            // C1: window.location.reload();
+            // C2: getAllTodos();
+            // C3:
+            // Xóa trên giao diện
+            todos = todos.filter((todo) => todo.id !== id);
+            renderTodos(todos);
+        }
+    } catch (error) {
+        console.log(error)
+    }
 
-    todos = todos.filter((todo) => todo.id !== id);
-    renderTodos(todos);
 };
 
 // Cập nhật tiêu đề công việc
-const editTodo = (id) => {
+const editTodo = async (id) => {
     console.log(id);
     // Tìm kiếm cv cần sửa theo id
     const todo = todos.find((todo) => todo.id === id);
@@ -124,20 +138,63 @@ const editTodo = (id) => {
         return;
     }
 
-    // Cập nhật lại tiêu đề công việc
-    todo.title = newTitle;
+    const data = {
+        title: newTitle,
+        status: todo.status
+    }
 
-    // Render lại giao diện
-    renderTodos(todos);
+    try {
+        let response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            // C1: window.location.reload();
+            // C2: getAllTodos();
+            // C3:
+            // Cập nhật lại tiêu đề công việc
+            todo.title = newTitle;
+
+            // Render lại giao diện
+            renderTodos(todos);
+        }
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 // Thay đổi trạng thái công việc
-const toggleStatus = (id) => {
+const toggleStatus = async (id) => {
     console.log(id);
     const todo = todos.find((todo) => todo.id === id);
-    todo.status = !todo.status;
 
-    renderTodos(todos);
+    const data = {
+        title: todo.title,
+        status: !todo.status
+    }
+    try {
+        let response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            // C1: window.location.reload();
+            // C2: getAllTodos();
+            // C3:
+            todo.status = !todo.status;
+            renderTodos(todos);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+
 };
 
 getAllTodos();
