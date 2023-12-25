@@ -1,10 +1,12 @@
 package vn.techmaster.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.techmaster.demo.model.Book;
+import vn.techmaster.demo.service.BookService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +23,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/books") //URL: http://localhost:8080/books, URL: http://localhost:8080/books/getAllBooks,
 public class BookController {
-    private final List<Book> books;
-
-    public BookController() {
-        books = new ArrayList<>();
-        books.add(new Book("1", "Gone with the wind", "Cuong", 1945));
-        books.add(new Book("2", "Chi Dau", "Nam Cao", 1943));
-    }
+    @Autowired
+    private BookService bookService;
 
     @GetMapping("/home")
     public String home() {
@@ -44,24 +41,13 @@ public class BookController {
 
     @GetMapping(path = {"", "/getAllBooks"})
     public ResponseEntity<List<Book>> getBooks() {
-        return new ResponseEntity<>(books, HttpStatus.CREATED);
+        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.CREATED);
     }
-
-//    @GetMapping("/getAllBooks")
-//    public List<Book> getAllBooks() {
-//        return books;
-//    }
 
     // http://localhost:8080/books/1
     // http://localhost:8080/books/2
     @GetMapping("/{id}")
     public ResponseEntity<?> getBookById(@PathVariable String id) {
-        System.out.println("id: " + id);
-        for (Book book : books) {
-            if (book.getId().equals(id)) {
-                return ResponseEntity.ok(book);
-            }
-        }
-        return null;
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 }
