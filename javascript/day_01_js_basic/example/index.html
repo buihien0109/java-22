@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Watch Store</title>
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+        <style>
+            /* Ensure you include this <style> block within the <head> element of your HTML or in a separate CSS file */
+
+            /* General body styling */
+            body {
+                background-color: #f8f9fa; /* Adjust the background color as needed */
+                font-family: "Segoe UI", Arial, sans-serif; /* This is an example; set the font you want */
+            }
+
+            /* Container adjustments for padding and margin */
+            .container {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+
+            /* Card styling */
+            .card {
+                border: none; /* Remove border if you prefer */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Simple box-shadow for a subtle depth effect */
+            }
+
+            .card img {
+                height: 250px; /* Set a fixed height for images */
+                object-fit: cover; /* This will make sure that the images cover the area properly */
+            }
+
+            .card-body {
+                padding: 10px; /* Reduced padding */
+            }
+
+            .card-title {
+                font-size: 1rem; /* Adjust the font size as needed */
+                margin-bottom: 5px; /* Adjust the margin as needed */
+            }
+
+            .card-text {
+                font-size: 0.9rem; /* Adjust the font size for the card text */
+                color: #666666; /* Grey text for card details */
+            }
+
+            .card-footer {
+                background-color: #ffffff; /* Matching the card body */
+                border-top: none;
+            }
+
+            /* Pagination styling */
+            .pagination {
+                justify-content: center; /* Center the pagination */
+                padding-top: 20px;
+            }
+
+            .page-link {
+                color: #000000; /* Color for the page numbers */
+            }
+
+            .page-item.active .page-link {
+                background-color: #007bff; /* Active page number background */
+                border-color: #007bff; /* Active page number border */
+            }
+
+            /* Hover effects */
+            .card:hover {
+                transform: translateY(-5px); /* Slight move upwards */
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for hover effect */
+            }
+
+            .page-link:hover {
+                background-color: #eeeeee; /* Slight background color change on hover */
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .card img {
+                    height: auto; /* On smaller screens, let the image have auto height */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Your content goes here -->
+        <div class="container mt-3">
+            <h2>Danh sách đồng hồ</h2>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <!-- Repeat this block for each product -->
+                <div class="col">
+                    <div class="card h-100">
+                        <img
+                            src="https://wscdn.vn/upload/image/OP990-45ADGS-GL-T-1-1131812509-1619214585.jpg?size=400x400&fomat=webp"
+                            class="card-img-top"
+                            alt="Watch"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title">Watch Brand - Model</h5>
+                            <p class="card-text">
+                                Some details about the watch.
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted"
+                                >Price and other details</small
+                            >
+                        </div>
+                    </div>
+                </div>
+                <!-- End of product block -->
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <!-- Repeat for each page number -->
+                    <li class="page-item">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <!-- ... -->
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </body>
+</html>
