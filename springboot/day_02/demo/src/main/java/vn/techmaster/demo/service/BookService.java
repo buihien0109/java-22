@@ -17,6 +17,15 @@ public class BookService {
     }
 
     public Book getBookById(String id) {
-        return bookDAO.findById(id);
+        // C1: Sử dụng trực tiếp
+        // return bookDAO.findById(id);
+
+        // C2: Sử dụng gián tiếp
+        for (Book book : bookDAO.findAll()) {
+            if (book.getId().equals(id)) {
+                return book;
+            }
+        }
+        return null;
     }
 }
