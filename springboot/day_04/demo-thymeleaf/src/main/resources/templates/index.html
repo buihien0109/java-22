@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--    <link rel="stylesheet" href="/style.css">-->
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<h1>Home page 123444</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto atque dolor earum eos harum inventore minima
+    quae, quam voluptate voluptatem?</p>
+
+<h2>Hiển thị dữ liệu 1 student</h2>
+<ul>
+    <li th:text="${'Id : ' + student.id}">Id : 1</li>
+    <li th:text="|Name : ${student.name}|">Name : An</li>
+    <li>Email :
+        <th:block th:text="${student.email}">an@gmail.com</th:block>
+    </li>
+    <li th:text="${student.age}">Age : 24</li>
+    <li th:text="${student.score}">Score : 8</li>
+</ul>
+
+<h2>Hiển thị dữ liệu danh sách student</h2>
+
+<button>
+    <a href="/">Tất cả học sinh</a>
+</button>
+<button>
+    <a href="/?rank=gioi">Học sinh giỏi</a>
+</button>
+<button>
+    <a href="/?rank=kha">Học sinh khá</a>
+</button>
+
+<br /><br />
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Score</th>
+        <th>Rank</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="student : ${students}" th:classappend="${student.score > 8 ? 'highlight' : ''}">
+        <td th:text="${student.id}">1</td>
+        <td th:text="${student.name}">An</td>
+        <td th:text="${student.email}">an@gmail</td>
+        <td th:text="${student.age}">23</td>
+        <td th:text="${student.score}">8</td>
+        <td th:text="${student.score > 8 ? 'Giỏi' : 'Khá'}"></td>
+        <td>
+            <a th:href="@{/students/{id} (id=${student.id})}">Xem chi tiết</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!--<script src="/main.js"></script>-->
+<script th:src="@{/main.js}"></script>
+</body>
+</html>
