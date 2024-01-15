@@ -1,0 +1,15 @@
+img {
+    max-width: 100%;
+}
+
+.navbar-brand img {
+    width: 180px;
+}
+
+.movie-poster {
+    height: 250px;
+}
+
+.movie-poster img {
+    object-fit: cover;
+}
