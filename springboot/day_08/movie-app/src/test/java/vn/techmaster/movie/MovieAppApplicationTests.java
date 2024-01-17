@@ -75,8 +75,9 @@ class MovieAppApplicationTests {
 //        List<Movie> movies = movieRepository.findAll(Sort.by("view").descending());
 //        movies.forEach(movie -> System.out.println(movie.getView()));
 
-//        Pageable pageable = PageRequest.of(0, 10, Sort.by("view").descending());
-//        Page<Movie> pageData = movieRepository.findAll(pageable);
+//        Pageable pageable = PageRequest.of(0, 6, Sort.by("publishedAt").descending());
+//        Page<Movie> pageData = movieRepository.findByTypeAndStatus(MovieType.PHIM_LE, true, pageable);
+//        System.out.println(pageData.getContent());
 //        System.out.println(pageData.getTotalPages());
 //        System.out.println(pageData.getTotalElements());
 //        pageData.getContent().forEach(System.out::println);
