@@ -8,6 +8,7 @@ import vn.techmaster.movie.entity.Movie;
 import vn.techmaster.movie.model.enums.MovieType;
 
 import java.util.List;
+import java.util.Optional;
 
 // Movie : Tên Entity
 // Integer: Kiểu dữ liệu của khóa chính
@@ -18,6 +19,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     // Lấy giới hạn số lượng bản ghi
     List<Movie> findFirstByTitle(String title);
+
     List<Movie> findTop5ByTitle(String title);
 
     // Tìm kiếm movie theo title chứa từ khóa keyword
@@ -52,4 +54,10 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     // Kiểm tra xem có movie nào có title chứa keyword không
     boolean existsByTitleContaining(String keyword);
+
+    List<Movie> findByTypeAndStatusAndRatingGreaterThanEqualAndIdNotOrderByRatingDescViewDescPublishedAtDesc(MovieType type, Boolean status, Double rating, Integer id);
+
+    Page<Movie> findByStatus(Boolean status, Pageable pageable);
+
+    Optional<Movie> findByIdAndSlugAndStatus(Integer id, String slug, Boolean status);
 }
