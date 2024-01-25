@@ -5,6 +5,7 @@ import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import vn.techmaster.movie.entity.Blog;
 import vn.techmaster.movie.entity.Movie;
 import vn.techmaster.movie.model.enums.MovieType;
 import vn.techmaster.movie.repository.MovieRepository;
@@ -18,6 +19,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public class InitDataTests {
     @Autowired
     private MovieRepository movieRepository;
+
+    @Test
+    void save_users() {
+    }
+
+    @Test
+    void save_blogs() {
+        for (int i = 0; i < 30; i++) {
+            // Random 1 user có role ADMIN
+
+            // Tạo blog với user này
+            Blog blog = Blog.builder()
+                    // .user()
+                    .build();
+        }
+    }
 
     @Test
     void save_movies() {

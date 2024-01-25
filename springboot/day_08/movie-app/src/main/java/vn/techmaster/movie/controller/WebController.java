@@ -49,13 +49,23 @@ public class WebController {
 
     // Danh sách phim lẻ
     @GetMapping("/phim-le")
-    public String getPhimLe() {
+    public String getPhimLe(Model model,
+                            @RequestParam(required = false, defaultValue = "1") Integer page,
+                            @RequestParam(required = false, defaultValue = "12") Integer size) {
+        Page<Movie> pageData = movieService.getMoviesByType(MovieType.PHIM_LE, true, page, size);
+        model.addAttribute("pageData", pageData);
+        model.addAttribute("currentPage", page);
         return "web/phim-le";
     }
 
     // Danh sách phim bộ
     @GetMapping("/phim-bo")
-    public String getPhimBo() {
+    public String getPhimBo(Model model,
+                            @RequestParam(required = false, defaultValue = "1") Integer page,
+                            @RequestParam(required = false, defaultValue = "12") Integer size) {
+        Page<Movie> pageData = movieService.getMoviesByType(MovieType.PHIM_BO, true, page, size);
+        model.addAttribute("pageData", pageData);
+        model.addAttribute("currentPage", page);
         return "web/phim-bo";
     }
 
