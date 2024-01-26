@@ -2,15 +2,16 @@ package vn.techmaster.movie.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import vn.techmaster.movie.entity.Movie;
+import vn.techmaster.movie.entity.Review;
 import vn.techmaster.movie.model.enums.MovieType;
 import vn.techmaster.movie.service.MovieService;
+import vn.techmaster.movie.service.ReviewService;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebController {
     private final MovieService movieService;
+    private final ReviewService reviewService;
 
     // Trang chủ
     @GetMapping("/")
@@ -74,9 +76,11 @@ public class WebController {
     public String getPhimDetailPage(Model model, @PathVariable Integer id, @PathVariable String slug) {
         Movie movie = movieService.getMovie(id, slug, true);
         List<Movie> relatedMovieList = movieService.getRelatedMovies(id, movie.getType(), true, 6);
+        List<Review> reviewList = reviewService.getReviewsByMovie(id);
 
         model.addAttribute("movie", movie);
         model.addAttribute("relatedMovieList", relatedMovieList);
+        model.addAttribute("reviewList", reviewList);
         return "web/chi-tiet-phim";
     }
 }
