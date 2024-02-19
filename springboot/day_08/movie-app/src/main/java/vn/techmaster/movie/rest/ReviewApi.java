@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.techmaster.movie.entity.Review;
-import vn.techmaster.movie.exception.BadRequestException;
-import vn.techmaster.movie.exception.ResourceNotFoundException;
 import vn.techmaster.movie.model.request.UpsertReviewRequest;
-import vn.techmaster.movie.model.response.ErrorResponse;
 import vn.techmaster.movie.service.ReviewService;
 
 @RestController

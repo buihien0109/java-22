@@ -100,7 +100,7 @@ public class ReviewService {
 
         // Kiểm tra xem review có phải của user đang login không? Nếu không báo lỗi
         if (!review.getUser().getId().equals(user.getId())) {
-            throw new BadRequestException("Bạn không có quyền cập nhật review này");
+            throw new BadRequestException("Bạn không có quyền xóa review này");
         }
 
         reviewRepository.delete(review);
