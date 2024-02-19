@@ -37,6 +37,91 @@ function highlightStars(rating) {
     });
 }
 
+// Format date
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const day = `0${date.getDate()}`.slice(-2); // `05` -> 05 , '015' -> 15
+    const month = `0${date.getMonth() + 1}`.slice(-2);
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
+
+// Lấy ratingText từ rating
+const getRatingText = (rating) => {
+    switch (rating) {
+        case 1:
+            return "Tệ";
+        case 2:
+            return "Kém";
+        case 3:
+            return "Trung bình";
+        case 4:
+            return "Tạm được";
+        case 5:
+            return "Hay";
+        case 6:
+            return "Rất hay";
+        case 7:
+            return "Tuyệt vời";
+        case 8:
+            return "Tuyệt hảo";
+        case 9:
+            return "Xuất sắc";
+        case 10:
+            return "Quá tuyệt vời";
+        default:
+            return "Chưa có đánh giá";
+    }
+}
+
+// Hiển thị danh sách đánh giá lên giao diện
+const reviewListEl = document.querySelector(".review-list");
+const renderReivew = (reviews) => {
+    let html = ""
+    reviews.forEach(review => {
+        html += `
+            <div class="rating-item d-flex align-items-center mb-3 pb-3">
+                <div class="rating-avatar">
+                    <img src="${review.user.avatar}" alt="${review.user.name}">
+                </div>
+                <div class="rating-info ms-3">
+                    <div class="d-flex align-items-center">
+                        <p class="rating-name mb-0">
+                            <strong>${review.user.name}</strong>
+                        </p>
+                        <p class="rating-time mb-0 ms-2">${formatDate(review.createdAt)}</p>
+                    </div>
+                    <div class="rating-star">
+                        <p class="mb-0 fw-bold">
+                            <span class="rating-icon"><i class="fa fa-star"></i></span>
+                            <span>${review.rating}/10 ${getRatingText(review.rating)}</span>
+                        </p>
+                    </div>
+                    <p class="rating-content mt-1 mb-0 text-muted">${review.comment}</p>
+                    <div>
+                        <button class="btn bg-transparent text-primary p-0 me-1 text-decoration-underline" onclick="openModalUpdateReview(${review.id})">Sửa</button>
+                        <button class="btn bg-transparent text-danger p-0 text-decoration-underline" onclick="deleteReview(${review.id})">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        `
+    });
+
+    reviewListEl.innerHTML = html;
+}
+
+const renderPagination = (reviews) => {
+    $('#review-pagination').pagination({
+        dataSource: reviews,
+        pageSize: 5,
+        callback: function (data, pagination) {
+            renderReivew(data);
+        }
+    })
+}
+
 // Xử lý mở modal đánh giá
 let idReviewUpdate = null;
 const modalReviewConfig = new bootstrap.Modal('#modalReview', {
@@ -89,6 +174,9 @@ const btnHandle = document.getElementById("btn-handle");
 btnHandle.addEventListener("click", (e) => {
     e.preventDefault();
 
+    // Nếu form invalid thì return
+    if (!$("#form-review").valid()) return;
+
     if (idReviewUpdate) {
         updateReview();
     } else {
@@ -96,15 +184,35 @@ btnHandle.addEventListener("click", (e) => {
     }
 })
 
+// Validate form
+$('#form-review').validate({
+    rules: {
+        content: {
+            required: true
+        }
+    },
+    messages: {
+        content: {
+            required: "Vui lòng nhập nội dung đánh giá"
+        }
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+    }
+});
+
 // Tạo mới review
 const createReview = () => {
-    if (reviewContentEl.value.trim() === "") {
-        alert("Vui lòng nhập nội dung đánh giá");
-        return;
-    }
-
     if (currentRating === 0) {
-        alert("Vui lòng chọn số sao");
+        toastr.warning("Vui lòng chọn số sao");
         return;
     }
 
@@ -113,28 +221,26 @@ const createReview = () => {
         rating: currentRating,
         movieId: movie.id
     }
-    console.log(data);
 
     // Gọi API để tạo mới review
     axios.post("/api/reviews", data)
         .then((res) => {
-            window.location.reload();
+            reviewList.unshift(res.data);
+            renderPagination(reviewList);
+
+            modalReviewConfig.hide();
+            toastr.success("Tạo đánh giá thành công");
         })
         .catch((err) => {
             console.log(err);
-            alert(err.response.data.message)
+            toastr.error(err.response.data.message)
         });
 }
 
 // Cập nhật review
 const updateReview = () => {
-    if (reviewContentEl.value.trim() === "") {
-        alert("Vui lòng nhập nội dung đánh giá");
-        return;
-    }
-
     if (currentRating === 0) {
-        alert("Vui lòng chọn số sao");
+        toastr.warning("Vui lòng chọn số sao");
         return;
     }
 
@@ -148,11 +254,16 @@ const updateReview = () => {
     // Gọi API để cập nhật review
     axios.put(`/api/reviews/${idReviewUpdate}`, data)
         .then((res) => {
-            window.location.reload();
+            const reviewIndex = reviewList.findIndex(review => review.id === idReviewUpdate);
+            reviewList[reviewIndex] = res.data;
+            renderPagination(reviewList);
+
+            modalReviewConfig.hide();
+            toastr.success("Cập nhật đánh giá thành công");
         })
         .catch((err) => {
             console.log(err);
-            alert(err.response.data.message)
+            toastr.error(err.response.data.message)
         });
 }
 
@@ -164,10 +275,15 @@ const deleteReview = id => {
     // Gọi API để xóa review
     axios.delete(`/api/reviews/${id}`)
         .then((res) => {
-            window.location.reload();
+            reviewList = reviewList.filter(review => review.id !== id);
+            renderPagination(reviewList);
+            toastr.success("Xóa đánh giá thành công");
         })
         .catch((err) => {
             console.log(err);
-            alert(err.response.data.message)
+            toastr.error(err.response.data.message)
         });
 }
+
+// Vừa vào trang thì render danh sách đánh giá + phân trang
+renderPagination(reviewList);

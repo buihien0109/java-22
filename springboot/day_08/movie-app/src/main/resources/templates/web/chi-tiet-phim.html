@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
           integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.css"
+          integrity="sha512-K1k7jSn9RDKEcn/ugqVVvWYu0bcS3q1w6m/5pQSnrj0bCfIqF6Wk49lkmckSb4wglvTP9V17LtS0q0XxYccXbg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/web/css/style.css">
 
 </head>
@@ -162,39 +165,10 @@
             <p>Vui lòng <a href="/dang-nhap" class="text-primary text-decoration-underline">đăng
                 nhập</a> để viết bình luận</p>
             <div class="review-list">
-                <div class="rating-item d-flex align-items-center mb-3 pb-3" th:each="review : ${reviewList}">
-                    <div class="rating-avatar">
-                        <img th:src="${review.user.avatar}" th:alt="${review.user.name}">
-                    </div>
-                    <div class="rating-info ms-3">
-                        <div class="d-flex align-items-center">
-                            <p class="rating-name mb-0">
-                                <strong th:text="${review.user.name}">Bùi Hiên</strong>
-                            </p>
-                            <p class="rating-time mb-0 ms-2" th:text="${#dates.format(review.createdAt, 'dd/MM/yyyy')}">
-                                09/01/2024</p>
-                        </div>
-                        <div class="rating-star">
-                            <p class="mb-0 fw-bold">
-                                <span class="rating-icon"><i class="fa fa-star"></i></span>
-                                <span><th:block th:text="${review.rating}"></th:block>/10 <th:block
-                                        th:text="${review.ratingText}"></th:block></span>
-                            </p>
-                        </div>
-                        <p class="rating-content mt-1 mb-0 text-muted" th:text="${review.comment}">Phim xem ổn. Điểm
-                            nhấn chính là sự hài hước và
-                            tiết
-                            tấu. Kết phim chưa thực sự hài lòng. 1 số nhân vật hoành tráng
-                            ở đầu và giữa phim, thì cuối phim mờ nhạt. Diễn biến phim hoặc
-                            chưa dành đủ thời gian, hoặc chưa nhấn mạnh đủ để dẫn đến các
-                            kết quả ở cuối phim.</p>
-                        <div>
-                            <button class="btn bg-transparent text-primary p-0 me-1 text-decoration-underline" th:onclick="|openModalUpdateReview(${review.id})|">Sửa</button>
-                            <button class="btn bg-transparent text-danger p-0 text-decoration-underline" th:onclick="|deleteReview(${review.id})|">Xóa</button>
-                        </div>
-                    </div>
-                </div>
+
             </div>
+
+            <div id="review-pagination" class="d-flex justify-content-center"></div>
         </div>
     </div>
 </section>
@@ -214,31 +188,31 @@
                         <span class="star" data-rating="1">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="2">
+                        <span class="star" data-rating="2">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="3">
+                        <span class="star" data-rating="3">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="4">
+                        <span class="star" data-rating="4">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="5">
+                        <span class="star" data-rating="5">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="6">
+                        <span class="star" data-rating="6">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="7">
+                        <span class="star" data-rating="7">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="8">
+                        <span class="star" data-rating="8">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="9">
+                        <span class="star" data-rating="9">
                            <i class="fa-solid fa-star"></i>
                         </span>
-                            <span class="star" data-rating="10">
+                        <span class="star" data-rating="10">
                            <i class="fa-solid fa-star"></i>
                         </span>
                     </div>
@@ -247,8 +221,10 @@
 
                 <form id="form-review">
                     <div class="mb-3">
-                        <textarea class="form-control" id="review-content" rows="4"
-                                  placeholder="Chia sẻ cảm nghĩ của bạn về bộ phim ..."></textarea>
+                        <div class="form-group">
+                            <textarea class="form-control" id="review-content" rows="4"
+                                      placeholder="Chia sẻ cảm nghĩ của bạn về bộ phim ..." name="content"></textarea>
+                        </div>
                     </div>
                     <div class="mb-3 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary" id="btn-handle">Hoàn tất</button>
@@ -322,10 +298,19 @@
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+        integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.min.js"
+        integrity="sha512-GzbaI5EsNzdEUq6/2XLYpr1y9CUZRIVsUeWTAFgULtQa5jZ3Nug8i0nZKM6jp9NffBCZhymPPQFcF0DK+JkRpw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/web/js/main.js"></script>
 <script th:inline="javascript">
     const movie = [[${movie}]];
-    const reviewList = [[${reviewList}]];
+    let reviewList = [[${reviewList}]];
 
     console.log({movie, reviewList})
 </script>
