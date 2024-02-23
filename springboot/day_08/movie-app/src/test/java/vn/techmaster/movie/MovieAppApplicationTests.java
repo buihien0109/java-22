@@ -1,26 +1,23 @@
 package vn.techmaster.movie;
 
-import com.github.javafaker.Faker;
-import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import vn.techmaster.movie.entity.Movie;
-import vn.techmaster.movie.model.enums.MovieType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import vn.techmaster.movie.entity.User;
 import vn.techmaster.movie.repository.MovieRepository;
+import vn.techmaster.movie.repository.UserRepository;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 @SpringBootTest
 class MovieAppApplicationTests {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     void test_movie_repo() {
@@ -47,5 +44,14 @@ class MovieAppApplicationTests {
 //        System.out.println(pageData.getTotalPages());
 //        System.out.println(pageData.getTotalElements());
 //        pageData.getContent().forEach(System.out::println);
+    }
+
+    @Test
+    void update_password() {
+        List<User> userList = userRepository.findAll();
+        userList.forEach(user -> {
+            user.setPassword(passwordEncoder.encode("123"));
+            userRepository.save(user);
+        });
     }
 }

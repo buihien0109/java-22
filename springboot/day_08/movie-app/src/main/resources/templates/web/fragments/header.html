@@ -24,7 +24,13 @@
                     <a class="nav-link text-white" href="/phim-le">Phim lẻ</a>
                 </div>
                 <div>
-                    <a class="text-white" href="/dang-nhap">Đăng nhập</a>
+                    <th:block th:if="${session.currentUser == null}">
+                        <a class="text-white" href="/dang-nhap">Đăng nhập</a>
+                    </th:block>
+
+                    <th:block th:if="${session.currentUser != null}">
+                        <p class="text-white mb-0" th:text="${session.currentUser.name}"></p>
+                    </th:block>
                 </div>
             </div>
         </div>

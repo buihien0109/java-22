@@ -15,3 +15,17 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 }
+
+// Xử lý active menu
+const activeMenu = () => {
+    // Lấy ra đường dẫn hiện tại
+    const pathName = window.location.pathname;
+    console.log(pathName)
+
+    // Lấy danh sách menu
+
+    // Kiểm tra xem đường dẫn hiện tại có trùng với thuộc tính href của menu nào không?
+    // Nếu có thì thêm class active vào menu đó
+}
+
+activeMenu();
