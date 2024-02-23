@@ -83,4 +83,14 @@ public class WebController {
         model.addAttribute("reviewList", reviewList);
         return "web/chi-tiet-phim";
     }
+
+    @GetMapping("/dang-nhap")
+    public String getLoginPage() {
+        return "web/auth/login";
+    }
+
+    @GetMapping("/dang-ky")
+    public String getRegisterPage() {
+        return "web/auth/register";
+    }
 }
