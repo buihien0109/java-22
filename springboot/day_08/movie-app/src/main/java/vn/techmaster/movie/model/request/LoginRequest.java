@@ -3,6 +3,7 @@ package vn.techmaster.movie.model.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor

@@ -12,7 +12,6 @@ import vn.techmaster.movie.repository.MovieRepository;
 import vn.techmaster.movie.repository.ReviewRepository;
 import vn.techmaster.movie.repository.UserRepository;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
