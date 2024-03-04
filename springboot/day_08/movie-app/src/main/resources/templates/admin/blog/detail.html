@@ -209,7 +209,7 @@
             let html = "";
             images.forEach(image => {
                 html += `
-                        <div class="image-item">
+                        <div class="image-item" onclick="choseImage(this)" data-id="${image.id}">
                             <img src="${image.url}" alt="">
                         </div>
                 `
@@ -240,9 +240,55 @@
                 })
         })
 
+        const choseImage = el => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (selectedEl) {
+                selectedEl.classList.remove("selected");
+            }
+
+            el.classList.add("selected");
+            btnChoseImage.disabled = false;
+            btnDeleteImage.disabled = false;
+        }
+
         // Chọn ảnh
+        btnChoseImage.addEventListener("click", () => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (!selectedEl) {
+                toastr.warning("Vui lòng chọn ảnh");
+                return;
+            }
+
+            const imageUrl = selectedEl.querySelector("img").getAttribute("src");
+            thumbnailPreviewEl.src = imageUrl;
+
+            $('#modal-image').modal('hide');
+        })
 
         // Xóa ảnh
+        btnDeleteImage.addEventListener("click", () => {
+            const selectedEl = document.querySelector(".image-item.selected");
+            if (!selectedEl) {
+                toastr.warning("Vui lòng chọn ảnh cần xóa");
+                return;
+            }
+
+            const imageId = selectedEl.dataset.id;
+            axios.delete(`/api/admin/images/${imageId}`)
+                .then(res => {
+                    imageList = imageList.filter(image => image.id !== imageId);
+                    renderImages(imageList);
+
+                    btnChoseImage.disabled = true;
+                    btnDeleteImage.disabled = true;
+
+                    toastr.success("Xoá ảnh thành công");
+                })
+                .catch(err => {
+                    console.log(err);
+                    toastr.error(err.response.data.message);
+                })
+        })
 
         renderImages(imageList);
     </script>
