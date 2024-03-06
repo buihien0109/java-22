@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout :: layout(~{:: title}, ~{:: #css}, ~{:: .content-wrapper}, ~{:: #js})}">
+
+<head>
+    <title>Danh sách phim</title>
+    <th:block id="css">
+        <link rel="stylesheet" href="/admin-assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"/>
+    </th:block>
+</head>
+
+<body>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/admin/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Danh sách phim
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row py-2">
+                <div class="col-12">
+                    <a href="/admin/movies/create" type="button" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tạo phim
+                    </a>
+                    <a href="/admin/movies" type="button" class="btn btn-info">
+                        <i class="fas fa-redo"></i> Refresh
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover" id="movie-table">
+                                <thead>
+                                <tr>
+                                    <th>Tên phim</th>
+                                    <th>Loại phim</th>
+                                    <th>Năm phát hành</th>
+                                    <th>Thể loại</th>
+                                    <th>View</th>
+                                    <th>Rating</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="movie : ${movies}">
+                                    <td>
+                                        <a th:href="@{/admin/movies/{id}/detail (id=${movie.id})}"
+                                           th:text="${movie.title}">Bee</a>
+                                    </td>
+                                    <td th:text="${movie.type.getValue()}">Loại phim</td>
+                                    <td th:text="${movie.releaseYear}">Năm phát hành</td>
+                                    <td>
+                                        <span class="badge bg-info mr-1" th:each="genre : ${movie.genres}"
+                                              th:text="${genre.name}">${genre.name}</span>
+                                    </td>
+                                    <td th:text="${movie.view == null ? 0 : #numbers.formatInteger(movie.view,3,'COMMA')}">
+                                        View
+                                    </td>
+                                    <td>
+                                        <span th:text="${movie.rating == null ? 0 : movie.rating}"></span>
+                                        <span style="color: #EDBB0E"><i class="fas fa-star"></i></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" th:text="${movie.status ? 'Công khai' : 'Nháp'}"
+                                              th:classappend="${movie.status ? 'bg-success' : 'bg-secondary'}">Công khai</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<th:block id="js">
+    <script src="/admin-assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+
+    <script>
+        $('#movie-table').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "order": [] // Khi load trang sẽ không sắp xếp theo cột nào cả
+        });
+    </script>
+</th:block>
+</body>
+</html>

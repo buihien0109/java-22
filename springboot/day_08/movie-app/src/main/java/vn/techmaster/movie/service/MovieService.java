@@ -48,4 +48,8 @@ public class MovieService {
                 .limit(size)
                 .toList();
     }
+
+    public List<Movie> getAllMovies() {
+        return movieRepository.findAll(Sort.by("createdAt").descending());
+    }
 }
