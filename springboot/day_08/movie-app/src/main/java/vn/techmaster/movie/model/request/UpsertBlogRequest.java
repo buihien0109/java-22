@@ -11,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpsertBlogRequest {
     String title;
-    String description;
     String content;
+    String description;
     Boolean status;
     String thumbnail;
 }

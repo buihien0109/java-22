@@ -158,4 +158,24 @@ btnDeleteImage.addEventListener("click", async () => {
     }
 })
 
+// Update blog
+const btnUpdate = document.getElementById('btn-update');
+const titleEl = document.getElementById('title');
+const descriptionEl = document.getElementById('description');
+const statusEl = document.getElementById('status');
+const thumbnailEl = document.getElementById('thumbnail');
+
+btnUpdate.addEventListener('click', () => {
+    // validate
+    // tạo data
+    const data = {
+        title: titleEl.value,
+        content: easyMDE.value(),
+        description: descriptionEl.value,
+        status: statusEl.value === "true",
+        thumbnail: thumbnailEl.getAttribute('src') === "" ? null : thumbnailEl.getAttribute('src')
+    }
+    console.log(data);
+})
+
 getImages(currentPage);
