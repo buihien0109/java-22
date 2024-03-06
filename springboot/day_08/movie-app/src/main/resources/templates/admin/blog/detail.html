@@ -180,9 +180,11 @@
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
     <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/admin-assets/dist/js/blog/blog-detail.js"></script>
+
     <script th:inline="javascript">
-        let imageList = [[${images}]]
-        console.log(imageList)
+        // let imageList = [[${images}]]
+        // console.log(imageList)
 
         //Initialize Select2 Elements
         $(".select2").select2();
@@ -197,100 +199,100 @@
             },
         });
 
-        // QUẢN LÝ ẢNH
-        const imageContainerEl = document.querySelector('.image-container');
-        const btnChoseImage = document.getElementById('btn-chose-image');
-        const btnDeleteImage = document.getElementById('btn-delete-image');
-        const inputImageEl = document.getElementById('avatar');
-        const thumbnailPreviewEl = document.getElementById('thumbnail');
-
-        // Hiển thị danh sách ảnh
-        const renderImages = images => {
-            let html = "";
-            images.forEach(image => {
-                html += `
-                        <div class="image-item" onclick="choseImage(this)" data-id="${image.id}">
-                            <img src="${image.url}" alt="">
-                        </div>
-                `
-            });
-            imageContainerEl.innerHTML = html;
-        }
-
-        // Upload ảnh
-        inputImageEl.addEventListener("change", (e) => {
-            // Lấy ra thông tin của file upload
-            const file = e.target.files[0];
-
-            // Tạo đối tượng formData
-            const formData = new FormData();
-            formData.append("file", file);
-
-            // Call api sử dụng axios
-            axios.post("/api/admin/images", formData)
-                .then(res => {
-                    imageList.unshift(res.data);
-                    renderImages(imageList);
-
-                    toastr.success("Upload ảnh thành công");
-                })
-                .catch(err => {
-                    console.log(err);
-                    toastr.error(err.response.data.message);
-                })
-        })
-
-        const choseImage = el => {
-            const selectedEl = document.querySelector(".image-item.selected");
-            if (selectedEl) {
-                selectedEl.classList.remove("selected");
-            }
-
-            el.classList.add("selected");
-            btnChoseImage.disabled = false;
-            btnDeleteImage.disabled = false;
-        }
-
-        // Chọn ảnh
-        btnChoseImage.addEventListener("click", () => {
-            const selectedEl = document.querySelector(".image-item.selected");
-            if (!selectedEl) {
-                toastr.warning("Vui lòng chọn ảnh");
-                return;
-            }
-
-            const imageUrl = selectedEl.querySelector("img").getAttribute("src");
-            thumbnailPreviewEl.src = imageUrl;
-
-            $('#modal-image').modal('hide');
-        })
-
-        // Xóa ảnh
-        btnDeleteImage.addEventListener("click", () => {
-            const selectedEl = document.querySelector(".image-item.selected");
-            if (!selectedEl) {
-                toastr.warning("Vui lòng chọn ảnh cần xóa");
-                return;
-            }
-
-            const imageId = selectedEl.dataset.id;
-            axios.delete(`/api/admin/images/${imageId}`)
-                .then(res => {
-                    imageList = imageList.filter(image => image.id !== imageId);
-                    renderImages(imageList);
-
-                    btnChoseImage.disabled = true;
-                    btnDeleteImage.disabled = true;
-
-                    toastr.success("Xoá ảnh thành công");
-                })
-                .catch(err => {
-                    console.log(err);
-                    toastr.error(err.response.data.message);
-                })
-        })
-
-        renderImages(imageList);
+        // // QUẢN LÝ ẢNH
+        // const imageContainerEl = document.querySelector('.image-container');
+        // const btnChoseImage = document.getElementById('btn-chose-image');
+        // const btnDeleteImage = document.getElementById('btn-delete-image');
+        // const inputImageEl = document.getElementById('avatar');
+        // const thumbnailPreviewEl = document.getElementById('thumbnail');
+        //
+        // // Hiển thị danh sách ảnh
+        // const renderImages = images => {
+        //     let html = "";
+        //     images.forEach(image => {
+        //         html += `
+        //                 <div class="image-item" onclick="choseImage(this)" data-id="${image.id}">
+        //                     <img src="${image.url}" alt="">
+        //                 </div>
+        //         `
+        //     });
+        //     imageContainerEl.innerHTML = html;
+        // }
+        //
+        // // Upload ảnh
+        // inputImageEl.addEventListener("change", (e) => {
+        //     // Lấy ra thông tin của file upload
+        //     const file = e.target.files[0];
+        //
+        //     // Tạo đối tượng formData
+        //     const formData = new FormData();
+        //     formData.append("file", file);
+        //
+        //     // Call api sử dụng axios
+        //     axios.post("/api/admin/images", formData)
+        //         .then(res => {
+        //             imageList.unshift(res.data);
+        //             renderImages(imageList);
+        //
+        //             toastr.success("Upload ảnh thành công");
+        //         })
+        //         .catch(err => {
+        //             console.log(err);
+        //             toastr.error(err.response.data.message);
+        //         })
+        // })
+        //
+        // const choseImage = el => {
+        //     const selectedEl = document.querySelector(".image-item.selected");
+        //     if (selectedEl) {
+        //         selectedEl.classList.remove("selected");
+        //     }
+        //
+        //     el.classList.add("selected");
+        //     btnChoseImage.disabled = false;
+        //     btnDeleteImage.disabled = false;
+        // }
+        //
+        // // Chọn ảnh
+        // btnChoseImage.addEventListener("click", () => {
+        //     const selectedEl = document.querySelector(".image-item.selected");
+        //     if (!selectedEl) {
+        //         toastr.warning("Vui lòng chọn ảnh");
+        //         return;
+        //     }
+        //
+        //     const imageUrl = selectedEl.querySelector("img").getAttribute("src");
+        //     thumbnailPreviewEl.src = imageUrl;
+        //
+        //     $('#modal-image').modal('hide');
+        // })
+        //
+        // // Xóa ảnh
+        // btnDeleteImage.addEventListener("click", () => {
+        //     const selectedEl = document.querySelector(".image-item.selected");
+        //     if (!selectedEl) {
+        //         toastr.warning("Vui lòng chọn ảnh cần xóa");
+        //         return;
+        //     }
+        //
+        //     const imageId = selectedEl.dataset.id;
+        //     axios.delete(`/api/admin/images/${imageId}`)
+        //         .then(res => {
+        //             imageList = imageList.filter(image => image.id !== imageId);
+        //             renderImages(imageList);
+        //
+        //             btnChoseImage.disabled = true;
+        //             btnDeleteImage.disabled = true;
+        //
+        //             toastr.success("Xoá ảnh thành công");
+        //         })
+        //         .catch(err => {
+        //             console.log(err);
+        //             toastr.error(err.response.data.message);
+        //         })
+        // })
+        //
+        // renderImages(imageList);
     </script>
 </th:block>
 </body>

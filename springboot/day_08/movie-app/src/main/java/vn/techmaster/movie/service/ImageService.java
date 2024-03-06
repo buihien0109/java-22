@@ -2,6 +2,9 @@ package vn.techmaster.movie.service;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.techmaster.movie.entity.Image;
@@ -40,6 +43,13 @@ public class ImageService {
                 throw new RuntimeException("Cannot create directory: " + path);
             }
         }
+    }
+
+    public Page<Image> getAllImagesByCurrentUser(Integer page, Integer limit) {
+        User user = (User) session.getAttribute("currentUser");
+
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        return imageRepository.findByUser_IdOrderByCreatedAtDesc(user.getId(), pageable);
     }
 
     public List<Image> getAllImagesByCurrentUser() {

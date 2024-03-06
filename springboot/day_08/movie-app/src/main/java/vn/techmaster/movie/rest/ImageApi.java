@@ -12,10 +12,12 @@ import vn.techmaster.movie.service.ImageService;
 @RequiredArgsConstructor
 public class ImageApi {
     private final ImageService imageService;
+
     // 1. Lấy danh sách ảnh của user
     @GetMapping
-    public ResponseEntity<?> getAllImagesByCurrentUser() {
-        return ResponseEntity.ok(imageService.getAllImagesByCurrentUser());
+    public ResponseEntity<?> getAllImagesByCurrentUser(@RequestParam(required = false, defaultValue = "1") int page,
+                                                       @RequestParam(required = false, defaultValue = "12") int limit) {
+        return ResponseEntity.ok(imageService.getAllImagesByCurrentUser(page, limit));
     }
 
     // 2. Upload ảnh mới
