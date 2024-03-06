@@ -7,8 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import vn.techmaster.movie.entity.Actor;
+import vn.techmaster.movie.entity.Director;
+import vn.techmaster.movie.entity.Genre;
 import vn.techmaster.movie.entity.Movie;
 import vn.techmaster.movie.model.enums.MovieType;
+import vn.techmaster.movie.model.request.UpsertMovieRequest;
+import vn.techmaster.movie.repository.ActorRepository;
+import vn.techmaster.movie.repository.DirectorRepository;
+import vn.techmaster.movie.repository.GenreRepository;
 import vn.techmaster.movie.repository.MovieRepository;
 
 import java.util.List;
@@ -18,6 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final DirectorRepository directorRepository;
+    private final ActorRepository actorRepository;
+    private final GenreRepository genreRepository;
 
     public Page<Movie> getHotMovies(Boolean status, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("view").descending()); // page trong jpa bắt đầu từ 0
@@ -51,5 +61,31 @@ public class MovieService {
 
     public List<Movie> getAllMovies() {
         return movieRepository.findAll(Sort.by("createdAt").descending());
+    }
+
+    public Movie createMovie(UpsertMovieRequest request) {
+        // Lấy danh sách đạo diễn, diễn viên, thể loại từ request
+        List<Director> directors = directorRepository.findAllById(request.getDirectorIds());
+        List<Actor> actors = actorRepository.findAllById(request.getActorIds());
+        List<Genre> genres = genreRepository.findAllById(request.getGenreIds());
+
+        // Bổ sung các thông tin khác cho movie từ request
+        Movie movie = Movie.builder()
+                .title(request.getTitle())
+                .directors(directors)
+                .actors(actors)
+                .genres(genres)
+                .build();
+
+        movieRepository.save(movie);
+        return movie;
+    }
+
+    public Movie updateMovie(Integer id, UpsertMovieRequest request) {
+        return null;
+    }
+
+    public void deleteMovie(Integer id) {
+
     }
 }
