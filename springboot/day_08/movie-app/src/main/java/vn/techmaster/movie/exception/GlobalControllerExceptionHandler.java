@@ -22,6 +22,7 @@ public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class) // Xử lý các exception chưa được khai báo
     public ResponseEntity<?> handleException(Exception e) {
+        e.printStackTrace();
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR); // 500
     }

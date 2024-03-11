@@ -5,6 +5,7 @@ import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import vn.techmaster.movie.entity.*;
 import vn.techmaster.movie.model.enums.MovieType;
 import vn.techmaster.movie.model.enums.UserRole;
@@ -38,6 +39,9 @@ public class InitDataTests {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private EpisodeRepository episodeRepository;
 
     @Test
     void save_genres() {
@@ -235,6 +239,47 @@ public class InitDataTests {
                     .build();
 
             movieRepository.save(movie);
+        }
+    }
+
+    @Test
+    void save_episodes() {
+        // Lấy danh sách phim
+        // Duyệt qua từng phim -> Kiểm tra type phim
+        // Nếu type = PHIM_BO -> Tạo ra 5 -> 10 tập phim tương ứng
+        // Nếu type = PHIM_LE hoặc PHIM_CHIEU_RAP -> Tạo ra 1 tập phim tương ứng
+        // Chưa cần thông tin về videoUrl và duration (set null)
+        Random random = new Random();
+        List<Movie> movieList = movieRepository.findAll();
+
+        for(Movie movie : movieList) {
+            if(movie.getType().equals(MovieType.PHIM_BO)) {
+                // Sử dụng vòng lặp để tạo ra 5 -> 10 tập phim
+                for(int i = 0; i < random.nextInt(5) + 5; i++) {
+                    Episode episode = Episode.builder()
+                            .title("Tập " + (i + 1))
+                            .displayOrder(i + 1)
+                            .status(true)
+                            .createdAt(new Date())
+                            .updatedAt(new Date())
+                            .publishedAt(new Date())
+                            .movie(movie)
+                            .build();
+                    episodeRepository.save(episode);
+                }
+            } else {
+                // Trường hợp phim lẻ, phim chiếu rạp thì chỉ có 1 tập phim
+                Episode episode = Episode.builder()
+                        .title("Tập full")
+                        .displayOrder(1)
+                        .status(true)
+                        .createdAt(new Date())
+                        .updatedAt(new Date())
+                        .publishedAt(new Date())
+                        .movie(movie)
+                        .build();
+                episodeRepository.save(episode);
+            }
         }
     }
 

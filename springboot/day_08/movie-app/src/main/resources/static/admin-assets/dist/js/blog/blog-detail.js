@@ -131,6 +131,8 @@ inputImageEl.addEventListener("change", async (e) => {
         console.log(err);
         toastr.error(err.response.data.message);
     }
+
+    e.target.value = "";
 })
 
 // Xóa ảnh

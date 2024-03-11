@@ -1,10 +1,343 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{admin/layout/layout :: layout(~{:: title}, ~{:: #css}, ~{:: .content-wrapper}, ~{:: #js})}">
 
+<head>
+    <title th:text="${movie.title}">Tạo phim</title>
+
+    <th:block id="css">
+        <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
+        <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+
+        <style>
+            .modal-dialog {
+                max-width: 1000px;
+            }
+
+            .image-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-gap: 10px;
+            }
+
+            .image-item {
+                height: 150px;
+                border: 2px solid #eee;
+            }
+
+            .image-item.selected {
+                border-color: red !important;
+                border-width: 4px !important;
+            }
+
+            .image-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/admin/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/admin/movies">Phim</a>
+                        </li>
+                        <li class="breadcrumb-item active" th:text="${movie.title}">
+                            Tạo phim
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row py-2">
+                <div class="col-6">
+                    <a href="/admin/movies" class="btn btn-default">
+                        <i class="fas fa-chevron-left"></i> Quay lại
+                    </a>
+                    <button type="button" class="btn btn-info px-4" id="btn-update">
+                        Lưu
+                    </button>
+                </div>
+
+                <div class="col-6 d-flex justify-content-end">
+                    <button type="button" class="btn btn-danger px-4">
+                        Xóa
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="form-create-movie">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Tên phim</label>
+                                            <input type="text" class="form-control" id="title" th:value="${movie.title}"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Mô tả ngắn</label>
+                                            <textarea id="description" class="form-control" rows="6" th:text="${movie.description}"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Đạo diễn</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="director">
+                                                    <option th:each="director : ${directors}"
+                                                            th:selected="${movie.directors.contains(director)}"
+                                                            th:value="${director.id}"
+                                                            th:text="${director.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Diễn viên</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="actor">
+                                                    <option th:each="actor : ${actors}"
+                                                            th:selected="${movie.actors.contains(actor)}"
+                                                            th:value="${actor.id}"
+                                                            th:text="${actor.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Thể loại</label>
+                                            <div class="select2-purple">
+                                                <select class="select2 form-control" multiple="multiple" id="genre">
+                                                    <option th:each="genre : ${genres}"
+                                                            th:selected="${movie.genres.contains(genre)}"
+                                                            th:value="${genre.id}"
+                                                            th:text="${genre.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Năm phát hành</label>
+                                            <input type="text" class="form-control" id="releaseYear" th:value="${movie.releaseYear}"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Trạng thái</label>
+                                            <select id="status" class="form-control">
+                                                <option value="false" th:selected="not ${movie.status}">
+                                                    Nháp
+                                                </option>
+                                                <option value="true" th:selected="${movie.status}">
+                                                    Công khai
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Loại phim</label>
+                                            <select id="type" class="form-control">
+                                                <option th:each="type : ${movieTypes}" th:value="${type}"
+                                                        th:selected="${type.getValue() == movie.type.getValue()}"
+                                                        th:text="${type.getValue()}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="thumbnail-preview-container mb-3">
+                                                <img th:src="${movie.poster}" alt="" id="thumbnail" class="d-block w-100" style="height: 300px; object-fit: cover"/>
+                                            </div>
+                                            <button type="button" class="btn btn-info btn-flat" data-toggle="modal"
+                                                    data-target="#modal-image">
+                                                Chọn hình ảnh
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="mb-3">Danh sách tập phim</h4>
+                            <table id="table-director" class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width: 5%">#</th>
+                                    <th style="width: 20%">Tên tập phim</th>
+                                    <th style="width: 40%">Link</th>
+                                    <th style="width: 10%">Thời lượng</th>
+                                    <th style="width: 10%">Trạng thái</th>
+                                    <th style="width: 15%"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="episode : ${episodes}">
+                                    <td th:text="${episode.displayOrder}">#</td>
+                                    <td th:text="${episode.title}">Tên tập phim</td>
+                                    <td th:text="${episode.videoUrl}">Link</td>
+                                    <td th:text="${episode.duration}">Thời lượng</td>
+                                    <td th:text="${episode.status ? 'Công khai' : 'Nháp'}">Trạng thái</td>
+                                    <td>
+                                        <label th:for="|episode-input-${episode.id}|"
+                                               class="btn btn-primary btn-sm mb-0"><i
+                                                class="fas fa-upload"></i></label>
+                                        <input type="file" class="d-none" th:id="|episode-input-${episode.id}|"
+                                               th:onchange="|uploadVideo(event, ${episode.id})|">
+
+                                        <button class="btn btn-warning btn-sm text-white"
+                                                th:onclick="|previewVideo(${episode.id})|">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                        <button class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="modal-preview-video">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Video Preview</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video width="100%" controls>
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-image" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Danh sách ảnh</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <button class="btn btn-success" id="btn-chose-image" disabled>Chọn ảnh</button>
+
+                            <label for="avatar" class="btn btn-warning mb-0">Upload ảnh</label>
+                            <input type="file" id="avatar" class="d-none">
+                        </div>
+                        <div>
+                            <button class="btn btn-danger" id="btn-delete-image" disabled>Xóa ảnh</button>
+                        </div>
+                    </div>
+                    <!-- Hiển thị danh sách ảnh -->
+                    <div class="image-container mt-4 mb-4">
+                        <div class="image-item">
+                            <img src="https://images.unsplash.com/photo-1656918931725-2f9d9fce4acb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw4fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
+                                 alt="">
+                        </div>
+                    </div>
+
+                    <!-- Hiển thị phần phân trang -->
+                    <div class="pagination-container d-flex justify-content-center">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block id="js">
+    <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+    <script th:inline="javascript">
+        $(".select2").select2();
+
+        const episodeList = [[${episodes}]];
+
+        // Xem trước video
+        const previewVideo = (episodeId) => {
+            // Tìm kiếm tập phim theo id
+            const episode = episodeList.find(e => e.id === episodeId)
+
+            // Lấy ra thẻ video và gán src cho nó
+            const videoEl = document.querySelector('#modal-preview-video video')
+            videoEl.src = episode.videoUrl
+
+            // Hiển thị modal
+            $('#modal-preview-video').modal('show')
+        }
+
+        // Nếu đóng modal preview video thì reset lại src của video
+        $('#modal-preview-video').on('hidden.bs.modal', function (event) {
+            const videoEl = document.querySelector('#modal-preview-video video')
+            videoEl.src = "";
+        })
+
+        // Upload video cho tập phim
+        const uploadVideo = (event, episodeId) => {
+            // Lấy ra file vừa được chọn
+            const file = event.target.files[0]
+
+            // Tạo đối tượng form data để đưa dữ liệu vào gửi đi
+            const formData = new FormData()
+            formData.append('file', file)
+
+            // Gọi api sử dung axios
+            axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
+                .then(res => {
+                    toastr.success('Upload video thành công.')
+
+                    // Reload lại trang sau 1.5s
+                    setTimeout(() => {
+                        location.reload()
+                    }, 1500)
+                })
+                .catch(err => {
+                    console.log(err)
+                    toastr.error(err.response.data.message)
+                })
+        }
+    </script>
+</th:block>
 </body>
+
 </html>

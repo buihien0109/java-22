@@ -11,6 +11,7 @@ import vn.techmaster.movie.entity.Actor;
 import vn.techmaster.movie.entity.Director;
 import vn.techmaster.movie.entity.Genre;
 import vn.techmaster.movie.entity.Movie;
+import vn.techmaster.movie.exception.ResourceNotFoundException;
 import vn.techmaster.movie.model.enums.MovieType;
 import vn.techmaster.movie.model.request.UpsertMovieRequest;
 import vn.techmaster.movie.repository.ActorRepository;
@@ -49,6 +50,11 @@ public class MovieService {
 
     public Movie getMovie(Integer id, String slug, Boolean status) {
         return movieRepository.findByIdAndSlugAndStatus(id, slug, status).orElse(null);
+    }
+
+    public Movie getMovie(Integer id) {
+        return movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id = " + id));
     }
 
     public List<Movie> getRelatedMovies(Integer id, MovieType type, Boolean status, Integer size) {
