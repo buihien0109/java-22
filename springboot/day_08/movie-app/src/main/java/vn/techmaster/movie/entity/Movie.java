@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.techmaster.movie.model.enums.MovieType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-    List<Actor> actors;
+    List<Actor> actors = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -54,7 +55,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "director_id")
     )
-    List<Director> directors;
+    List<Director> directors = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -62,5 +63,5 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    List<Genre> genres;
+    List<Genre> genres = new ArrayList<>();
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import vn.techmaster.movie.entity.Movie;
 import vn.techmaster.movie.model.enums.MovieType;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,4 +61,8 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     Page<Movie> findByStatus(Boolean status, Pageable pageable);
 
     Optional<Movie> findByIdAndSlugAndStatus(Integer id, String slug, Boolean status);
+
+    long countByGenres_Id(Integer id);
+
+    long countByCreatedAtBetween(Date start, Date end);
 }

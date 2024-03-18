@@ -1,5 +1,6 @@
 package vn.techmaster.movie.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -55,6 +56,7 @@ public class Review {
     @JoinColumn(name = "user_id")
     User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "movie_id")
     Movie movie;
