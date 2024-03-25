@@ -1,10 +1,14 @@
 package com.example.demospringsecurity.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -13,7 +17,19 @@ import org.springframework.security.web.SecurityFilterChain;
         securedEnabled = true,
         jsr250Enabled = true
 )
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(customUserDetailsService);
+        return provider;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Cấu hình đường dẫn truy cập
@@ -55,6 +71,9 @@ public class SecurityConfig {
             logout.clearAuthentication(true); // Xóa thông tin đăng nhập của user hiện tại trong SecurityContext
             logout.permitAll(); // Cho phép tất cả mọi người truy cập vào logout mà không cần xác thực
         });
+
+        // Cấu hình xác thực
+        http.authenticationProvider(authenticationProvider());
 
         return http.build();
     }
