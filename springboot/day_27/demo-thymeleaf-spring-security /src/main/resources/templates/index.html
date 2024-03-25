@@ -14,9 +14,9 @@
 </th:block>
 
 <th:block sec:authorize="isAuthenticated()">
-    <button>
-        <a href="/logout">Đăng xuất</a>
-    </button>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Đăng xuất</button>
+    </form>
 
     <h2>Xin chào <th:block sec:authentication="name"></th:block></h2>
 
