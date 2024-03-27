@@ -7,18 +7,37 @@
 <body>
 <h1>Form Login</h1>
 
-<div th:if="${param.error}" style="color: red">
-    Invalid username and password.
-</div>
-
-<form th:action="@{/login-handle}" method="post">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="name"><br>
+<form>
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email"><br>
 
     <label for="password">Password:</label><br>
-    <input type="password" id="password" name="pass"><br><br>
+    <input type="password" id="password" name="password"><br><br>
 
     <button type="submit">Login</button>
 </form>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await axios.post('/api/auth/login', {
+                email: email,
+                password: password
+            });
+            alert('Login success');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
 </body>
 </html>
