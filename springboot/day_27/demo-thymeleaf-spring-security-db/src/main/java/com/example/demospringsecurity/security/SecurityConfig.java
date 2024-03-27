@@ -1,5 +1,7 @@
 package com.example.demospringsecurity.security;
 
+import com.example.demospringsecurity.security.error.CustomAccessDeniedHandler;
+import com.example.demospringsecurity.security.error.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,8 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final CustomFilter customFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -57,6 +61,12 @@ public class SecurityConfig {
             logout.invalidateHttpSession(true); // Hủy session
             logout.clearAuthentication(true); // Xóa thông tin đăng nhập của user hiện tại trong SecurityContext
             logout.permitAll(); // Cho phép tất cả mọi người truy cập vào logout mà không cần xác thực
+        });
+
+        // Cấu hình xử lý exception
+        http.exceptionHandling(exceptionHandling -> {
+            exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint); // Xử lý khi chưa xác thực
+            exceptionHandling.accessDeniedHandler(customAccessDeniedHandler); // Xử lý khi truy cập không đúng quyền
         });
 
         // Cấu hình xác thực
