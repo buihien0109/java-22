@@ -35,4 +35,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     List<Role> roles = new ArrayList<>();
+
+    Boolean enabled;
 }
